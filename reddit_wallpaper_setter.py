@@ -1,12 +1,13 @@
-import praw 
-import urllib.request
 import random
 import json
 import sys
 import ctypes
 import time
 import os
+import praw 
+import urllib.request
 from dotenv import load_dotenv
+from datetime import date
 
 def getRandomTopImageFromRWallpapers():
     r = praw.Reddit(
@@ -18,11 +19,19 @@ def getRandomTopImageFromRWallpapers():
     posts = sub.top(limit=100)
     random_post_number = random.randint(0,100)
 
+    imageUrl = ""
     for i,post in enumerate(posts):
         if i==random_post_number:
             imageUrl = post.url
     
     imageUrl = imageUrl.replace("https","http")
+
+    # log wallpaper history
+    today = date.today()
+    # dd/mm/YY
+    dateNow = today.strftime("%d/%m/%Y")
+    print(dateNow," ",imageUrl)
+
     imageFilename = storeImageInStoredBackgroundsFolder(imageUrl)
     setImageAsBackground(imageFilename)        
 
